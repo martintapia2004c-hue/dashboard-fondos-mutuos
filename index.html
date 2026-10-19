@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fondos Mutuos Chilenos · Acciones nacionales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --fondo: #f3f5f9; --tarjeta: #ffffff; --texto: #1b2333; --suave: #6b7489; --borde: #e4e8f0;
+    --azul: #2457d6; --azul-osc: #0f2a5c; --verde: #1f9d6b; --rojo: #d64545;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--fondo); color: var(--texto); }
+  .ancho { max-width: 1200px; margin: 0 auto; }
+
+  header { background: linear-gradient(135deg, #0f2a5c 0%, #2457d6 100%); color: #fff; padding: 36px 20px 84px; }
+  header h1 { margin: 0 0 6px; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
+  header p { margin: 0; opacity: 0.85; }
+  .chip-fuente { display: inline-block; margin-top: 14px; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 13px; }
+
+  main { margin-top: -60px; padding: 0 20px 30px; }
+  #mensaje { background: #fdecec; color: #a11; border-radius: 10px; padding: 12px; margin-bottom: 14px; font-weight: 600; }
+  .oculto { display: none; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .kpi { background: var(--tarjeta); border-radius: 14px; padding: 16px 18px; box-shadow: 0 4px 18px rgba(15,42,92,0.08); }
+  .kpi .titulo { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--suave); font-weight: 600; }
+  .kpi .valor { font-size: 24px; font-weight: 700; margin: 6px 0 2px; }
+  .kpi .detalle { font-size: 12px; color: var(--suave); line-height: 1.4; }
+  .sube { color: var(--verde); }
+  .baja { color: var(--rojo); }
+
+  .barra-seccion { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin: 30px 0 4px; }
+  .barra-seccion h2 { margin: 0; font-size: 19px; }
+
+  .botones { display: inline-flex; background: #e6eaf2; border-radius: 10px; padding: 3px; }
+  .botones button { border: 0; background: transparent; padding: 6px 12px; border-radius: 8px; font: inherit; font-size: 13px; color: var(--suave); cursor: pointer; }
+  .botones button.activo { background: #fff; color: var(--azul-osc); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  .tarjeta { background: var(--tarjeta); border-radius: 14px; padding: 18px 20px; box-shadow: 0 4px 18px rgba(15,42,92,0.06); margin-top: 16px; }
+  .grilla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grilla .tarjeta { margin-top: 16px; }
+  .cabecera { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .cabecera h3 { margin: 0; font-size: 16px; }
+  .cabecera .sub { font-size: 12px; color: var(--suave); margin-top: 3px; }
+
+  .lienzo { position: relative; height: 340px; }
+  .lienzo.alto { height: 460px; }
+  .lienzo.medio { height: 330px; }
+  .nota { font-size: 12px; color: var(--suave); margin: 10px 0 0; line-height: 1.5; }
+
+  select { font: inherit; font-size: 13px; padding: 6px 10px; border: 1px solid var(--borde); border-radius: 8px; background: #fff; color: var(--texto); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { border: 1px solid var(--borde); background: #fff; border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; color: var(--suave); display: inline-flex; align-items: center; gap: 6px; }
+  .chip .punto { width: 8px; height: 8px; border-radius: 50%; opacity: 0.35; }
+  .chip.activo { color: var(--texto); border-color: #b9c3d6; background: #f6f8fc; font-weight: 600; }
+  .chip.activo .punto { opacity: 1; }
+
+  .mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .mini div { background: #f6f8fc; border-radius: 10px; padding: 10px 12px; }
+  .mini .t { font-size: 10px; color: var(--suave); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .mini .v { font-size: 17px; font-weight: 700; margin-top: 3px; }
+
+  .aviso { background: #fff7e6; border: 1px solid #f3d9a4; color: #7a5200; border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 10px; }
+
+  .metodo { font-size: 13px; color: var(--suave); line-height: 1.6; margin: 0; padding-left: 18px; }
+  .metodo li { margin-bottom: 4px; }
+  .metodo b { color: var(--texto); }
+
+  footer { text-align: center; font-size: 12px; color: var(--suave); padding: 10px 20px 30px; }
+
+  @media (max-width: 860px) {
+    .grilla { grid-template-columns: 1fr; }
+    .mini { grid-template-columns: 1fr; }
+    header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ancho">
+    <h1>Fondos Mutuos Chilenos</h1>
+    <p>Posiciones y flujos de la industria en acciones nacionales</p>
+    <span class="chip-fuente" id="chipDatos">Fuente: CMF</span>
+  </div>
+</header>
+
+<main class="ancho">
+  <div id="mensaje" class="oculto"></div>
+
+  <!-- Tarjetas resumen -->
+  <section class="kpis" id="kpis"></section>
+
+  <!-- Evolución -->
+  <div class="barra-seccion">
+    <h2>Evolución</h2>
+    <div class="botones" id="botonesRango">
+      <button data-rango="todo" class="activo">Desde 2015</button>
+      <button data-rango="60">5 años</button>
+      <button data-rango="24">2 años</button>
+      <button data-rango="12">12 meses</button>
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <div class="cabecera">
+      <div>
+        <h3>Flujo neto de la industria en acciones nacionales</h3>
+        <div class="sub">Millones de $ · compras menos ventas estimadas, sin el efecto precio</div>
+      </div>
+      <div class="botones" id="botonesFlujo">
+        <button data-vista="mensual" class="activo">Mensual</button>
+        <button data-vista="acumulado">Acumulado</button>
+      </div>
+    </div>
+    <div class="lienzo"><canvas id="gFlujo"></canvas></div>
+    <p class="nota">Positivo = los fondos compraron; negativo = vendieron. Flujo = (acciones este mes − mes anterior) × precio de referencia del mes. "Acumulado" suma desde el inicio del rango elegido. Fuente: CMF.</p>
+  </div>
+
+  <div class="tarjeta">
+    <div class="cabecera">
+      <div>
+        <h3>Patrimonio oficial de la industria de fondos mutuos</h3>
+        <div class="sub">Millones de $ · todos los tipos de fondo</div>
+      </div>
+      <div class="botones" id="botonesPat">
+        <button data-vista="total" class="activo">Total</button>
+        <button data-vista="tipo">Por tipo de fondo</button>
+      </div>
+    </div>
+    <div class="lienzo"><canvas id="gPat"></canvas></div>
+    <p class="nota">Cifra oficial publicada por la CMF. Los tipos de fondo siguen la clasificación de la Circular 1.578 (códigos 1 a 8). Fuente: CMF.</p>
+  </div>
+
+  <div class="tarjeta">
+    <div class="cabecera">
+      <div>
+        <h3>Peso de cada acción en la cartera accionaria de la industria</h3>
+        <div class="sub">% del total invertido por los fondos mutuos en acciones nacionales · haz clic para agregar o quitar acciones</div>
+      </div>
+    </div>
+    <div class="chips" id="chipsPeso"></div>
+    <div class="lienzo"><canvas id="gPeso"></canvas></div>
+    <p class="nota">Se ofrecen las 15 acciones con mayor peso en el último mes; vienen marcadas las 8 primeras. Un hueco en la línea indica que ningún fondo tenía la acción ese mes. Fuente: CMF.</p>
+  </div>
+
+  <!-- Detalle mensual -->
+  <div class="barra-seccion">
+    <h2>Detalle por mes y por acción</h2>
+  </div>
+
+  <div class="grilla">
+    <div class="tarjeta">
+      <div class="cabecera">
+        <div>
+          <h3>Más compradas y más vendidas</h3>
+          <div class="sub">Top 10 de cada lado · millones de $ · clic en una barra para ver su ficha</div>
+        </div>
+        <select id="selMes"></select>
+      </div>
+      <div id="avisoRanking" class="aviso oculto"></div>
+      <div class="lienzo alto"><canvas id="gRanking"></canvas></div>
+      <p class="nota">Flujo neto estimado de todos los fondos mutuos en cada acción. Fuente: CMF.</p>
+    </div>
+
+    <div class="tarjeta">
+      <div class="cabecera">
+        <div>
+          <h3>Ficha de una acción</h3>
+          <div class="sub">Flujo mensual (barras) y peso en la industria (línea)</div>
+        </div>
+        <select id="selAccion"></select>
+      </div>
+      <div class="mini" id="miniFicha"></div>
+      <div class="lienzo medio"><canvas id="gFicha"></canvas></div>
+      <p class="nota">Usa el mismo rango de fechas elegido arriba. Fuente: CMF.</p>
+    </div>
+  </div>
+
+  <!-- Metodología -->
+  <div class="tarjeta">
+    <h3 style="margin-top:0">Cómo leer estos datos</h3>
+    <ul class="metodo">
+      <li><b>Fuente:</b> carteras mensuales de inversiones nacionales de los fondos mutuos y estadísticas de patrimonio de la industria, publicadas por la CMF. Elaboración propia.</li>
+      <li><b>Flujo neto:</b> estimación. Compara la cantidad de acciones entre un mes y el anterior y la valoriza al precio de referencia del mes (mediana entre fondos). No ve operaciones que se compran y venden dentro del mismo mes.</li>
+      <li><b>Peso:</b> porcentaje sobre lo invertido por los fondos mutuos en acciones nacionales, no sobre su patrimonio total.</li>
+      <li><b>Patrimonio:</b> cifra oficial de la CMF para toda la industria. Llega hasta un mes distinto que las carteras (ver encabezado).</li>
+      <li><b>Ajustes conocidos:</b> el canje de ITAUCL de mayo de 2023 está corregido. En abril de 2023 ITAUCL aparece por primera vez en la base, por lo que su flujo de ese mes está sobrestimado. Los fondos en dólares se valorizan con el precio de referencia en pesos.</li>
+      <li><b>No incluido:</b> patrimonio por administradora (AGF), porque aún no hay una cifra oficial incorporada.</li>
+    </ul>
+  </div>
+</main>
+
+<footer>Fuente: CMF (Comisión para el Mercado Financiero). Elaboración propia con datos públicos · Martín Tapia Caballero</footer>
+
+<script>
+  // ================= Constantes y formatos =================
+  const PALETA = ["#2457d6", "#d64545", "#1f9d6b", "#e08a1e", "#7b3fc4", "#0f9aa8", "#c2397a", "#5b6b82",
+                  "#8fb339", "#b5651d", "#3b8ede", "#9c4f4f", "#2f7d5b", "#a77bd6", "#d4a017"];
+  const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  const TIPOS = [
+    ["Deuda_90", "Deuda corto plazo (≤ 90 días)", "#0f2a5c"],
+    ["Deuda_365", "Deuda corto plazo (≤ 365 días)", "#2457d6"],
+    ["Deuda_MLP", "Deuda mediano y largo plazo", "#6f95ea"],
+    ["Mixto", "Mixto", "#0f9aa8"],
+    ["Capitalizacion", "Capitalización", "#1f9d6b"],
+    ["Libre_inv", "Libre inversión", "#e08a1e"],
+    ["Estructurado", "Estructurado", "#c2397a"],
+    ["Calificados", "Inversionistas calificados", "#7b3fc4"]
+  ];
+
+  const fmt0 = n => Math.round(n).toLocaleString("es-CL");
+  const fmt1 = n => n.toLocaleString("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const fmt2 = n => n.toLocaleString("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const conSigno = (n, f) => (n > 0 ? "+" : "") + f(n);
+  const claseSigno = n => (n >= 0 ? "sube" : "baja");
+
+  function etiqueta(p) {
+    const s = String(p);
+    return MESES[Number(s.slice(4, 6)) - 1] + " " + s.slice(0, 4);
+  }
+
+  // Resta n meses a un periodo AAAAMM (ej. 202609 menos 12 = 202509)
+  function mesesAtras(p, n) {
+    const total = Math.floor(p / 100) * 12 + (p % 100 - 1) - n;
+    return Math.floor(total / 12) * 100 + (total % 12) + 1;
+  }
+
+  function aRegistros(split) {
+    return split.data.map(fila => {
+      const r = {};
+      split.columns.forEach((c, i) => { r[c] = fila[i]; });
+      return r;
+    });
+  }
+
+  async function cargar(nombre) {
+    const resp = await fetch(nombre);
+    if (!resp.ok) throw new Error("No se pudo leer " + nombre + " (código " + resp.status + ")");
+    return resp.json();
+  }
+
+  // ================= Estado y datos =================
+  const D = {};
+  const estado = { rango: "todo", vistaFlujo: "mensual", vistaPat: "total", seleccion: [], mes: null, accion: null };
+  const graficos = {};
+
+  function preparar(flujoLista, patSplit, tipoSplit, pesoSplit) {
+    // Flujos: vienen en miles de $; se pasan a millones de $
+    D.flujoMes = {}; D.flujoMesAccion = {}; D.flujoAccion = {};
+    flujoLista.forEach(f => {
+      const p = Number(f.Periodo), a = f.FFM_6010100, v = f.Flujo / 1000;
+      D.flujoMes[p] = (D.flujoMes[p] || 0) + v;
+      (D.flujoMesAccion[p] = D.flujoMesAccion[p] || []).push({ accion: a, flujo: v });
+      (D.flujoAccion[a] = D.flujoAccion[a] || {})[p] = v;
+    });
+    D.periodosFlujo = Object.keys(D.flujoMes).map(Number).sort((a, b) => a - b);
+    D.ultimoFlujo = D.periodosFlujo[D.periodosFlujo.length - 1];
+
+    D.pat = aRegistros(patSplit).map(r => ({ ...r, Periodo: Number(r.Periodo) })).sort((a, b) => a.Periodo - b.Periodo);
+    D.tipo = aRegistros(tipoSplit).map(r => ({ ...r, Periodo: Number(r.Periodo) })).sort((a, b) => a.Periodo - b.Periodo);
+
+    D.pesoAccion = {}; D.pesoMes = {};
+    aRegistros(pesoSplit).forEach(r => {
+      const p = Number(r.Periodo), a = r.FFM_6010100;
+      (D.pesoAccion[a] = D.pesoAccion[a] || {})[p] = r.Peso;
+      (D.pesoMes[p] = D.pesoMes[p] || []).push({ accion: a, peso: r.Peso });
+    });
+    D.periodosPeso = Object.keys(D.pesoMes).map(Number).sort((a, b) => a - b);
+    D.ultimoPeso = D.periodosPeso[D.periodosPeso.length - 1];
+
+    D.ultimoGlobal = Math.max(D.ultimoFlujo, D.ultimoPeso, D.pat[D.pat.length - 1].Periodo);
+
+    D.topPeso = D.pesoMes[D.ultimoPeso].slice().sort((a, b) => b.peso - a.peso).slice(0, 15).map(x => x.accion);
+    D.colorAccion = {};
+    D.topPeso.forEach((a, i) => { D.colorAccion[a] = PALETA[i]; });
+
+    estado.seleccion = D.topPeso.slice(0, 8);
+    estado.mes = D.ultimoFlujo;
+    estado.accion = D.topPeso[0];
+  }
+
+  function enRango(p) {
+    if (estado.rango === "todo") return true;
+    return p >= mesesAtras(D.ultimoGlobal, Number(estado.rango) - 1);
+  }
+
+  // ================= Ayudas de Chart.js =================
+  Chart.defaults.font.family = "Inter, Arial, sans-serif";
+  Chart.defaults.color = "#6b7489";
+  Chart.defaults.borderColor = "#edf0f5";
+
+  function dibujar(id, config) {
+    if (graficos[id]) graficos[id].destroy();
+    graficos[id] = new Chart(document.getElementById(id), config);
+  }
+
+  const ejeX = () => ({ grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, autoSkip: true } });
+
+  function degradado(ctx, colorArriba) {
+    const { chart } = ctx;
+    if (!chart.chartArea) return colorArriba;
+    const g = chart.ctx.createLinearGradient(0, chart.chartArea.top, 0, chart.chartArea.bottom);
+    g.addColorStop(0, colorArriba);
+    g.addColorStop(1, "rgba(36,87,214,0)");
+    return g;
+  }
+
+  // ================= Tarjetas resumen =================
+  function pintarKpis() {
+    const ultPat = D.pat[D.pat.length - 1];
+    const antPat = D.pat.find(r => r.Periodo === mesesAtras(ultPat.Periodo, 12));
+    const varPat = antPat ? (ultPat.Patrimonio / antPat.Patrimonio - 1) * 100 : null;
+
+    const uf = D.ultimoFlujo;
+    const flujoUlt = D.flujoMes[uf];
+    const flujo12 = D.periodosFlujo.filter(p => p > mesesAtras(uf, 12)).reduce((s, p) => s + D.flujoMes[p], 0);
+
+    const orden = D.flujoMesAccion[uf].slice().sort((a, b) => b.flujo - a.flujo);
+    const masC = orden[0], masV = orden[orden.length - 1];
+
+    const top5 = D.pesoMes[D.ultimoPeso].slice().sort((a, b) => b.peso - a.peso).slice(0, 5);
+    const conc = top5.reduce((s, x) => s + x.peso, 0);
+
+    const tarjetas = [
+      {
+        titulo: "Patrimonio oficial industria",
+        valor: fmt0(ultPat.Patrimonio),
+        detalle: "millones de $ · " + etiqueta(ultPat.Periodo) +
+          (varPat === null ? "" : `<br><span class="${claseSigno(varPat)}">${conSigno(varPat, fmt1)} %</span> en 12 meses`)
+      },
+      {
+        titulo: "Flujo neto en acciones · " + etiqueta(uf),
+        valor: `<span class="${claseSigno(flujoUlt)}">${conSigno(flujoUlt, fmt0)}</span>`,
+        detalle: `millones de $<br>Últimos 12 meses: <span class="${claseSigno(flujo12)}">${conSigno(flujo12, fmt0)}</span>`
+      },
+      {
+        titulo: "Más comprada · " + etiqueta(uf),
+        valor: masC && masC.flujo > 0 ? masC.accion : "—",
+        detalle: masC && masC.flujo > 0 ? `<span class="sube">${conSigno(masC.flujo, fmt0)}</span> millones de $` : "Ninguna con flujo positivo"
+      },
+      {
+        titulo: "Más vendida · " + etiqueta(uf),
+        valor: masV && masV.flujo < 0 ? masV.accion : "—",
+        detalle: masV && masV.flujo < 0 ? `<span class="baja">${fmt0(masV.flujo)}</span> millones de $` : "Ninguna con flujo negativo"
+      },
+      {
+        titulo: "Concentración · " + etiqueta(D.ultimoPeso),
+        valor: fmt1(conc) + " %",
+        detalle: "peso de las 5 mayores acciones<br>(" + top5.map(x => x.accion).join(", ") + ")"
+      }
+    ];
+
+    document.getElementById("kpis").innerHTML = tarjetas.map(t =>
+      `<div class="kpi"><div class="titulo">${t.titulo}</div><div class="valor">${t.valor}</div><div class="detalle">${t.detalle}</div></div>`
+    ).join("");
+
+    document.getElementById("chipDatos").textContent =
+      "Fuente: CMF · carteras hasta " + etiqueta(D.ultimoFlujo) + " · patrimonio oficial hasta " + etiqueta(ultPat.Periodo);
+  }
+
+  // ================= Gráfico: flujo de la industria =================
+  function graficoFlujo() {
+    const per = D.periodosFlujo.filter(enRango);
+    const mensual = estado.vistaFlujo === "mensual";
+    let datos = per.map(p => D.flujoMes[p]);
+    if (!mensual) { let s = 0; datos = datos.map(v => (s += v)); }
+
+    dibujar("gFlujo", {
+      type: mensual ? "bar" : "line",
+      data: {
+        labels: per.map(etiqueta),
+        datasets: [{
+          label: mensual ? "Flujo neto" : "Flujo acumulado",
+          data: datos,
+          backgroundColor: mensual
+            ? datos.map(v => (v >= 0 ? "rgba(31,157,107,0.85)" : "rgba(214,69,69,0.85)"))
+            : ctx => degradado(ctx, "rgba(36,87,214,0.28)"),
+          borderColor: mensual ? "transparent" : "#2457d6",
+          borderWidth: mensual ? 0 : 2,
+          borderRadius: mensual ? 3 : 0,
+          fill: !mensual,
+          pointRadius: 0,
+          tension: 0.25
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => c.dataset.label + ": " + conSigno(c.raw, fmt0) + " millones de $" } }
+        },
+        scales: { x: ejeX(), y: { ticks: { callback: v => fmt0(v) } } }
+      }
+    });
+  }
+
+  // ================= Gráfico: patrimonio oficial =================
+  function graficoPatrimonio() {
+    if (estado.vistaPat === "total") {
+      const f = D.pat.filter(r => enRango(r.Periodo));
+      dibujar("gPat", {
+        type: "line",
+        data: {
+          labels: f.map(r => etiqueta(r.Periodo)),
+          datasets: [{
+            label: "Patrimonio", data: f.map(r => r.Patrimonio),
+            borderColor: "#2457d6", borderWidth: 2,
+            backgroundColor: ctx => degradado(ctx, "rgba(36,87,214,0.28)"),
+            fill: true, pointRadius: 0, tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: c => "Patrimonio: " + fmt0(c.raw) + " millones de $" } }
+          },
+          scales: { x: ejeX(), y: { ticks: { callback: v => fmt0(v) } } }
+        }
+      });
+    } else {
+      const f = D.tipo.filter(r => enRango(r.Periodo));
+      dibujar("gPat", {
+        type: "line",
+        data: {
+          labels: f.map(r => etiqueta(r.Periodo)),
+          datasets: TIPOS.map(([col, nombre, color], i) => ({
+            label: nombre, data: f.map(r => r[col]),
+            borderColor: color, backgroundColor: color + "b3", borderWidth: 1,
+            fill: i === 0 ? "origin" : "-1", pointRadius: 0, tension: 0.2
+          }))
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } },
+            tooltip: {
+              callbacks: {
+                label: c => c.dataset.label + ": " + fmt0(c.raw),
+                footer: items => "Total: " + fmt0(items.reduce((s, i) => s + i.raw, 0)) + " millones de $"
+              }
+            }
+          },
+          scales: { x: ejeX(), y: { stacked: true, ticks: { callback: v => fmt0(v) } } }
+        }
+      });
+    }
+  }
+
+  // ================= Gráfico: peso por acción =================
+  function pintarChips() {
+    const cont = document.getElementById("chipsPeso");
+    cont.innerHTML = "";
+    D.topPeso.forEach(a => {
+      const b = document.createElement("button");
+      b.className = "chip" + (estado.seleccion.includes(a) ? " activo" : "");
+      b.innerHTML = `<span class="punto" style="background:${D.colorAccion[a]}"></span>${a}`;
+      b.onclick = () => {
+        estado.seleccion = estado.seleccion.includes(a)
+          ? estado.seleccion.filter(x => x !== a)
+          : estado.seleccion.concat(a);
+        pintarChips();
+        graficoPeso();
+      };
+      cont.appendChild(b);
+    });
+  }
+
+  function graficoPeso() {
+    const per = D.periodosPeso.filter(enRango);
+    dibujar("gPeso", {
+      type: "line",
+      data: {
+        labels: per.map(etiqueta),
+        datasets: estado.seleccion.map(a => ({
+          label: a,
+          data: per.map(p => (D.pesoAccion[a][p] ?? null)),
+          borderColor: D.colorAccion[a], backgroundColor: D.colorAccion[a],
+          pointRadius: 0, borderWidth: 2, tension: 0.25
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            itemSort: (a, b) => (b.raw ?? -1) - (a.raw ?? -1),
+            callbacks: { label: c => c.dataset.label + ": " + (c.raw === null ? "sin posición" : fmt2(c.raw) + " %") }
+          }
+        },
+        scales: { x: ejeX(), y: { beginAtZero: true, ticks: { callback: v => v + " %" } } }
+      }
+    });
+  }
+
+  // ================= Ranking mensual =================
+  function pintarSelectorMes() {
+    const s = document.getElementById("selMes");
+    s.innerHTML = D.periodosFlujo.slice().reverse().map(p => `<option value="${p}">${etiqueta(p)}</option>`).join("");
+    s.value = String(estado.mes);
+    s.onchange = () => { estado.mes = Number(s.value); graficoRanking(); };
+  }
+
+  function graficoRanking() {
+    const lista = (D.flujoMesAccion[estado.mes] || []).slice().sort((a, b) => b.flujo - a.flujo);
+    const compras = lista.filter(x => x.flujo > 0).slice(0, 10);
+    const ventas = lista.filter(x => x.flujo < 0).slice(-10);
+    const filas = compras.concat(ventas);
+
+    const aviso = document.getElementById("avisoRanking");
+    if (estado.mes === 202304 && filas.some(x => x.accion === "ITAUCL")) {
+      aviso.textContent = "Ojo: en abril de 2023 ITAUCL aparece por primera vez en la base, así que su flujo de este mes está sobrestimado.";
+      aviso.classList.remove("oculto");
+    } else {
+      aviso.classList.add("oculto");
+    }
+
+    dibujar("gRanking", {
+      type: "bar",
+      data: {
+        labels: filas.map(x => x.accion),
+        datasets: [{
+          label: "Flujo neto",
+          data: filas.map(x => x.flujo),
+          backgroundColor: filas.map(x => (x.flujo >= 0 ? "rgba(31,157,107,0.85)" : "rgba(214,69,69,0.85)")),
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => "Flujo: " + conSigno(c.raw, fmt0) + " millones de $" } }
+        },
+        scales: {
+          x: { ticks: { callback: v => fmt0(v), maxTicksLimit: 6 } },
+          y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 11 } } }
+        },
+        onClick: (e, elementos) => {
+          if (!elementos.length) return;
+          estado.accion = filas[elementos[0].index].accion;
+          document.getElementById("selAccion").value = estado.accion;
+          graficoFicha();
+        }
+      }
+    });
+  }
+
+  // ================= Ficha de una acción =================
+  function pintarSelectorAccion() {
+    const todas = [...new Set([...Object.keys(D.pesoAccion), ...Object.keys(D.flujoAccion)])].sort();
+    const s = document.getElementById("selAccion");
+    s.innerHTML = todas.map(a => `<option value="${a}">${a}</option>`).join("");
+    s.value = estado.accion;
+    s.onchange = () => { estado.accion = s.value; graficoFicha(); };
+  }
+
+  function graficoFicha() {
+    const a = estado.accion;
+    const pesos = D.pesoAccion[a] || {};
+    const flujos = D.flujoAccion[a] || {};
+    const up = D.ultimoPeso;
+    const pesoAct = pesos[up];
+    const pesoAnt = pesos[mesesAtras(up, 12)];
+    const f12 = D.periodosFlujo.filter(p => p > mesesAtras(D.ultimoFlujo, 12)).reduce((s, p) => s + (flujos[p] || 0), 0);
+
+    const cambio = (pesoAct != null && pesoAnt != null) ? pesoAct - pesoAnt : null;
+    document.getElementById("miniFicha").innerHTML = `
+      <div><div class="t">Peso · ${etiqueta(up)}</div><div class="v">${pesoAct != null ? fmt2(pesoAct) + " %" : "sin posición"}</div></div>
+      <div><div class="t">Cambio de peso 12 meses</div><div class="v ${cambio === null ? "" : claseSigno(cambio)}">${cambio === null ? "—" : conSigno(cambio, fmt2) + " pp"}</div></div>
+      <div><div class="t">Flujo 12 meses (mill. $)</div><div class="v ${claseSigno(f12)}">${conSigno(f12, fmt0)}</div></div>`;
+
+    const per = D.periodosPeso.filter(enRango);
+    dibujar("gFicha", {
+      type: "bar",
+      data: {
+        labels: per.map(etiqueta),
+        datasets: [
+          {
+            type: "bar", label: "Flujo neto (millones de $)", yAxisID: "y", order: 2,
+            data: per.map(p => (flujos[p] ?? null)),
+            backgroundColor: per.map(p => ((flujos[p] || 0) >= 0 ? "rgba(31,157,107,0.7)" : "rgba(214,69,69,0.7)")),
+            borderRadius: 2
+          },
+          {
+            type: "line", label: "Peso en la industria (%)", yAxisID: "y1", order: 1,
+            data: per.map(p => (pesos[p] ?? null)),
+            borderColor: "#2457d6", backgroundColor: "#2457d6", pointRadius: 0, borderWidth: 2, tension: 0.25
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } },
+          tooltip: {
+            callbacks: {
+              label: c => {
+                if (c.raw === null) return c.dataset.label + ": sin dato";
+                return c.dataset.yAxisID === "y1"
+                  ? "Peso: " + fmt2(c.raw) + " %"
+                  : "Flujo: " + conSigno(c.raw, fmt0) + " millones de $";
+              }
+            }
+          }
+        },
+        scales: {
+          x: ejeX(),
+          y: { position: "left", ticks: { callback: v => fmt0(v) } },
+          y1: { position: "right", beginAtZero: true, grid: { drawOnChartArea: false }, ticks: { callback: v => v + " %" } }
+        }
+      }
+    });
+  }
+
+  // ================= Botones =================
+  function activarBotones(idGrupo, atributo, alCambiar) {
+    const grupo = document.getElementById(idGrupo);
+    grupo.querySelectorAll("button").forEach(b => {
+      b.addEventListener("click", () => {
+        grupo.querySelectorAll("button").forEach(x => x.classList.remove("activo"));
+        b.classList.add("activo");
+        alCambiar(b.dataset[atributo]);
+      });
+    });
+  }
+
+  // ================= Programa principal =================
+  async function iniciar() {
+    try {
+      const [flujo, pat, tipo, peso] = await Promise.all([
+        cargar("flujo_industria.json"),
+        cargar("cmf_patrimonio_industria.json"),
+        cargar("cmf_patrimonio_tipo.json"),
+        cargar("peso_industria.json")
+      ]);
+      preparar(flujo, pat, tipo, peso);
+
+      pintarKpis();
+      graficoFlujo();
+      graficoPatrimonio();
+      pintarChips();
+      graficoPeso();
+      pintarSelectorMes();
+      graficoRanking();
+      pintarSelectorAccion();
+      graficoFicha();
+
+      activarBotones("botonesRango", "rango", v => {
+        estado.rango = v;
+        graficoFlujo(); graficoPatrimonio(); graficoPeso(); graficoFicha();
+      });
+      activarBotones("botonesFlujo", "vista", v => { estado.vistaFlujo = v; graficoFlujo(); });
+      activarBotones("botonesPat", "vista", v => { estado.vistaPat = v; graficoPatrimonio(); });
+    } catch (error) {
+      const m = document.getElementById("mensaje");
+      m.textContent = "Error: " + error.message;
+      m.classList.remove("oculto");
+      console.error(error);
+    }
+  }
+
+  iniciar();
+</script>
+</body>
+</html>
