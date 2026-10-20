@@ -1,0 +1,28 @@
+name: Prueba CMF
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar requests
+        run: pip install requests
+
+      - name: Pedir septiembre 2026 a la CMF
+        run: |
+          python - <<'FIN'
+          import requests
+          CABECERAS = {"User-Agent": "Proyecto academico de Martin Tapia (estudiante de Magister en Finanzas, dashboard de fondos mutuos con datos publicos de la CMF)"}
+          URL = "https://www.cmfchile.cl/institucional/estadisticas/ffm_download.php"
+          r = requests.post(URL, data={"mm": "09", "aa": "2026", "cartera": "NACI"},
+                            headers=CABECERAS, timeout=60)
+          print("Estado:", r.status_code)
+          print("Nombre:", r.headers.get("Content-Disposition", ""))
+          print("Tamano:", len(r.content), "bytes")
+          FIN
