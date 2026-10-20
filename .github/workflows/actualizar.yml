@@ -4,9 +4,15 @@ on:
   schedule:
     - cron: "0 13 6-15 * *"   # días 6 al 15 de cada mes, 13:00 UTC (10:00 en Chile)
   workflow_dispatch:           # y también con el botón "Run workflow"
+    inputs:
+      probar_aviso:
+        description: "Crear un aviso de prueba aunque no haya cambios"
+        type: boolean
+        default: false
 
 permissions:
-  contents: write              # permiso para subir los cambios al repositorio
+  contents: write              # permiso para subir los cambios
+  issues: write                # permiso para crear el aviso
 
 jobs:
   actualizar:
@@ -24,7 +30,7 @@ jobs:
         run: pip install pandas numpy requests
 
       - name: Buscar datos nuevos en la CMF
-        run: python agregar_mes.py
+        run: python agregar_mes.py | tee /tmp/resultado.txt
 
       - name: Recalcular todo
         run: |
@@ -34,14 +40,23 @@ jobs:
           python web/crear_sitio.py
 
       - name: Publicar si hubo cambios
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          { tail -n 8 /tmp/resultado.txt; echo; echo "Sitio: https://fondos-mutuos-chile.netlify.app"; echo "Detalle: $LINK"; } > /tmp/aviso.txt
           git add -A
           if git diff --cached --quiet; then
             echo "SIN CAMBIOS: no se publica nada."
+            if [ "${{ inputs.probar_aviso }}" = "true" ]; then
+              gh issue create --title "Aviso de prueba $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt
+              echo "AVISO DE PRUEBA creado."
+            fi
           else
             git commit -m "Actualizacion automatica $(date +%Y-%m-%d)"
             git push
+            gh issue create --title "Datos actualizados $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt
             echo "PUBLICADO: hubo datos nuevos."
           fi
