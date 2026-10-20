@@ -66,6 +66,54 @@ button, select, input { font: inherit; color: inherit; }
   padding: 8px 12px; border-radius: 8px; font-weight: 500; font-size: 15px;
 }
 .menu a:hover { background: #E7ECF2; color: var(--tinta); }
+.menu a[aria-current="page"] { background: var(--tinta); color: #fff; }
+section[hidden] { display: none; }
+main { min-height: 70vh; }
+
+/* ===================== Comparar ponderaciones ===================== */
+.comparar { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--linea); }
+.comparar h5 { font-size: 17px; margin: 0 0 4px; }
+.comparar .sub { margin-bottom: 14px; }
+.btn-ipsa, .btn-otro {
+  border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; font-size: 14px;
+  border: 1px solid var(--tinta);
+}
+.btn-ipsa { background: var(--papel); color: var(--tinta); }
+.btn-ipsa[aria-pressed="true"] { background: var(--tinta); color: #fff; }
+.btn-otro { background: var(--papel); color: var(--tinta-suave); border-color: var(--linea); font-weight: 500; }
+.btn-otro[aria-pressed="true"] { border-color: var(--tinta); color: var(--tinta); font-weight: 600; }
+.selector-fondo { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.selector-fondo select { max-width: 320px; }
+.titular-comp {
+  font-family: "IBM Plex Serif", Georgia, serif; font-size: 20px; line-height: 1.4; font-weight: 500;
+  margin: 4px 0 16px; max-width: 60ch;
+}
+.apuestas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.apuesta { background: #F6F8FA; border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+.apuesta h6 { font-size: 14px; margin: 0 0 8px; }
+.apuesta ul { margin: 0; padding-left: 18px; }
+.apuesta li { margin: 0 0 6px; }
+.apuesta .sobre { color: var(--acento); font-weight: 600; }
+.apuesta .bajo { color: #A85F00; font-weight: 600; }
+.fila-comp {
+  display: grid; grid-template-columns: 100px 1fr 64px 64px 72px; gap: 10px; align-items: center;
+  padding: 6px 4px; border-bottom: 1px solid #EEF1F4; font-size: 14px; width: 100%;
+  border-left: 0; border-right: 0; border-top: 0; background: transparent; text-align: left; cursor: pointer;
+}
+.fila-comp:hover { background: #F6F8FA; }
+.fila-comp.encab { cursor: default; font-size: 12px; color: var(--tenue); border-bottom-color: var(--linea); }
+.fila-comp.encab:hover { background: transparent; }
+.fila-comp .nombre { font-weight: 600; }
+.fila-comp .num { text-align: right; }
+.dos-barras { display: grid; gap: 3px; }
+.dos-barras span { display: block; height: 7px; border-radius: 2px; min-width: 1px; }
+.dos-barras .b-fondo { background: var(--acento); }
+.dos-barras .b-comp { background: #A9B4C2; }
+.dif-pos { color: var(--acento); font-weight: 600; }
+.dif-neg { color: #A85F00; font-weight: 600; }
+.leyenda { display: flex; gap: 16px; font-size: 13px; color: var(--tinta-suave); margin: 0 0 8px; }
+.leyenda i { display: inline-block; width: 12px; height: 7px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.mas { margin-top: 10px; border: 1px solid var(--linea); background: var(--papel); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 14px; }
 
 /* ===================== Secciones ===================== */
 section { padding: 40px 0 8px; }
@@ -136,6 +184,37 @@ select, input[type="search"] {
 .fila-rank .barra span { display: block; height: 100%; border-radius: 3px; }
 .fila-rank .monto { font-size: 14px; text-align: right; }
 .vacio { color: var(--tenue); font-size: 14px; }
+.fila-agf {
+  display: grid; grid-template-columns: 24px 170px 1fr 112px 58px; align-items: center; gap: 10px;
+  padding: 6px 4px; border-bottom: 1px solid #EEF1F4; font-size: 14px;
+}
+.fila-agf:last-child { border-bottom: 0; }
+.fila-agf .pos-n { color: var(--tenue); text-align: right; }
+.fila-agf .nombre { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila-agf .barra { height: 14px; border-radius: 3px; background: #EEF1F4; overflow: hidden; }
+.fila-agf .barra span { display: block; height: 100%; border-radius: 3px; background: var(--acento); }
+.fila-agf .monto { text-align: right; }
+.fila-agf .peso { text-align: right; color: var(--tinta-suave); }
+button.fila-agf { width: 100%; border: 0; border-bottom: 1px solid #EEF1F4; background: transparent; text-align: left; cursor: pointer; border-radius: 6px; }
+button.fila-agf:hover { background: #F1F4F7; }
+.fila-agf.con-inicial { grid-template-columns: 24px 30px 150px 1fr 112px 58px; }
+.inicial {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--acento-claro); color: var(--acento);
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;
+}
+.fila-fondo { grid-template-columns: 24px minmax(0, 2fr) 1fr 112px 76px; }
+.fila-fondo .run { display: block; font-weight: 400; color: var(--tenue); font-size: 12px; }
+.fila-fondo .nombre { white-space: normal; }
+.migas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; font-size: 14px; }
+.migas button { border: 0; background: none; color: var(--acento); cursor: pointer; padding: 2px 0; text-decoration: underline; }
+.migas .actual { font-weight: 600; }
+.encab-col { display: grid; gap: 10px; padding: 0 4px 6px; font-size: 12px; color: var(--tenue); border-bottom: 1px solid var(--linea); }
+.encab-col span:nth-last-child(-n+2) { text-align: right; }
+.ficha-fondo h4 { font-size: 20px; margin: 0 0 2px; }
+.ficha-fondo .run { color: var(--tenue); font-size: 14px; margin: 0 0 16px; }
+.dos-col { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
+.dos-col h5 { font-size: 15px; margin: 0 0 8px; }
+#topFondo .fila-rank { grid-template-columns: 100px 1fr 116px; }
 
 /* ===================== Gráficos ===================== */
 .lienzo { position: relative; height: 340px; }
@@ -177,7 +256,10 @@ footer p { margin: 4px 0; }
 @media (max-width: 820px) {
   .cifras { grid-template-columns: 1fr 1fr; }
   .cifra:nth-child(3) { border-left: 0; padding-left: 0; }
-  .ranking, .glosario { grid-template-columns: 1fr; }
+  .ranking, .glosario, .dos-col, .apuestas { grid-template-columns: 1fr; }
+  .fila-comp { grid-template-columns: 84px 1fr 54px 54px 60px; gap: 6px; font-size: 13px; }
+  .titular-comp { font-size: 17px; }
+  .btn-ipsa, .btn-otro { width: 100%; }
   .ficha-cifras { grid-template-columns: 1fr; }
   .panel { padding: 16px; }
   .lienzo { height: 290px; }
@@ -187,6 +269,11 @@ footer p { margin: 4px 0; }
   .cifras { grid-template-columns: 1fr; }
   .cifra + .cifra { border-left: 0; padding-left: 0; border-top: 1px solid var(--linea); }
   .fila-rank { grid-template-columns: 92px 1fr 84px; }
+  .fila-agf { grid-template-columns: 18px 1fr 96px 50px; }
+  .fila-agf .barra { display: none; }
+  .fila-agf.con-inicial { grid-template-columns: 18px 30px 1fr 96px 50px; }
+  .fila-fondo { grid-template-columns: 18px 1fr 90px 60px; }
+  .encab-col { display: none; }
 }
 </style>
 </head>
@@ -203,11 +290,11 @@ footer p { margin: 4px 0; }
 
 <nav class="menu" aria-label="Secciones">
   <div class="envoltura">
-    <a href="#resumen">Resumen</a>
-    <a href="#ranking">Compras y ventas del mes</a>
-    <a href="#accion">Buscar una acción</a>
-    <a href="#tendencias">Tendencias</a>
-    <a href="#metodo">Cómo leer los datos</a>
+    <a href="#inicio" data-vista-link="inicio">Inicio</a>
+    <a href="#administradoras" data-vista-link="administradoras">Administradoras y fondos</a>
+    <a href="#accion" data-vista-link="accion">Buscar una acción</a>
+    <a href="#tendencias" data-vista-link="tendencias">Tendencias</a>
+    <a href="#metodo" data-vista-link="metodo">Cómo leer los datos</a>
   </div>
 </nav>
 
@@ -215,7 +302,7 @@ footer p { margin: 4px 0; }
   <div class="envoltura"><div class="error" id="error"></div></div>
 
   <!-- ===================== 1. Resumen ===================== -->
-  <section id="resumen">
+  <section id="resumen" data-vista="inicio">
     <div class="envoltura">
       <p class="titular" id="titular">Cargando…</p>
       <div class="cifras">
@@ -244,7 +331,7 @@ footer p { margin: 4px 0; }
   </section>
 
   <!-- ===================== 2. Ranking del mes ===================== -->
-  <section id="ranking">
+  <section id="ranking" data-vista="inicio">
     <div class="envoltura">
       <h2>¿Qué compraron y vendieron los fondos?</h2>
       <p class="intro">Las 10 acciones con más compras netas y las 10 con más ventas netas en el mes elegido, en millones de pesos. Haz clic en una acción para ver su historia.</p>
@@ -271,8 +358,33 @@ footer p { margin: 4px 0; }
     </div>
   </section>
 
+  <!-- ===================== 2b. Administradoras (AGF) ===================== -->
+  <section id="agf" data-vista="administradoras" hidden>
+    <div class="envoltura">
+      <h2>¿Qué administradoras tienen más acciones chilenas?</h2>
+      <p class="intro">Valor de las acciones chilenas que tienen los fondos de cada administradora (AGF), en millones de pesos. No es el patrimonio total de la AGF: una administradora grande en renta fija puede aparecer abajo. Haz clic en una administradora para ver sus fondos, y en un fondo para ver sus principales acciones.</p>
+      <div class="panel">
+        <div class="controles">
+          <button class="flecha" id="agfAnterior" aria-label="Mes anterior">‹</button>
+          <select id="selMesAgf" aria-label="Mes"></select>
+          <button class="flecha" id="agfSiguiente" aria-label="Mes siguiente">›</button>
+          <span class="espaciador"></span>
+          <span class="etiqueta-control" id="agfTotal"></span>
+        </div>
+        <div id="listaAgf"></div>
+        <p class="nota">Cada fondo se asigna a su administradora actual. Los fondos en dólares se valorizan con el precio de referencia en pesos. Fuente: CMF.</p>
+      </div>
+      <div class="panel">
+        <h3>Participación de las mayores administradoras en el tiempo</h3>
+        <p class="sub">% del total que los fondos mutuos tienen invertido en acciones chilenas.</p>
+        <div class="controles"><div class="grupo rango" role="group" aria-label="Período"></div></div>
+        <div class="lienzo bajo"><canvas id="gAgf" aria-label="Participación de las administradoras en el tiempo"></canvas></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== 3. Ficha de una acción ===================== -->
-  <section id="accion">
+  <section id="accion" data-vista="accion" hidden>
     <div class="envoltura">
       <h2>Buscar una acción</h2>
       <p class="intro">Elige una acción para ver cuánto pesa en la cartera de los fondos y si la han estado comprando o vendiendo.</p>
@@ -297,7 +409,7 @@ footer p { margin: 4px 0; }
   </section>
 
   <!-- ===================== 4. Tendencias ===================== -->
-  <section id="tendencias">
+  <section id="tendencias" data-vista="tendencias" hidden>
     <div class="envoltura">
       <h2>Tendencias desde 2015</h2>
       <p class="intro">La foto de largo plazo: cuánto entra o sale de las acciones chilenas, qué acciones dominan las carteras y cuánto administra la industria.</p>
@@ -344,7 +456,7 @@ footer p { margin: 4px 0; }
   </section>
 
   <!-- ===================== 5. Cómo leer ===================== -->
-  <section id="metodo">
+  <section id="metodo" data-vista="metodo" hidden>
     <div class="envoltura">
       <h2>Cómo leer estos datos</h2>
       <p class="intro">Cada mes, todos los fondos mutuos chilenos informan a la CMF su cartera completa. Este sitio junta esas carteras desde enero de 2015 y se queda con las acciones chilenas.</p>
@@ -381,8 +493,20 @@ footer p { margin: 4px 0; }
             <dd>Se incluyen los fondos que salen por completo de una acción. Lo que se compra y vende dentro de un mismo mes no se ve.</dd>
           </div>
           <div>
+            <dt>Inversión por administradora</dt>
+            <dd>Suma el valor de las acciones chilenas de todos los fondos de cada AGF. Mide cuánto pesa cada administradora en la bolsa local, no su patrimonio total. Cada fondo se asigna a su administradora actual, aunque haya cambiado de dueño en el pasado.</dd>
+          </div>
+          <div>
+            <dt>Comparación con el IPSA</dt>
+            <dd>Las ponderaciones del IPSA se aproximan con la cartera de un fondo indexado a ese índice, informada a la CMF cada mes. "Sobrepondera" significa que el fondo tiene una acción con más peso que el índice; "subpondera", con menos. La diferencia se mide en puntos porcentuales (pp).</dd>
+          </div>
+          <div>
+            <dt>Active share</dt>
+            <dd>Qué tanto se aleja un fondo del índice: la mitad de la suma de todas las diferencias de peso, calculada sobre la cartera de acciones chilenas. 0 % es una copia del índice; 100 % no comparte ninguna acción.</dd>
+          </div>
+          <div>
             <dt>Lo que aún no está</dt>
-            <dd>Patrimonio por administradora (AGF) y detalle por fondo. Se agregarán cuando haya una cifra oficial incorporada.</dd>
+            <dd>Patrimonio total por administradora y detalle por fondo.</dd>
           </div>
         </dl>
       </div>
@@ -589,7 +713,7 @@ function pintarRanking() {
     ? ventas.map(x => filaRanking(x, maximo)).join("") : "<p class='vacio'>Sin ventas netas este mes.</p>";
   document.querySelectorAll(".fila-rank").forEach(b => b.onclick = () => {
     elegirAccion(b.dataset.accion);
-    document.getElementById("accion").scrollIntoView();
+    irA("accion");
   });
 
   const neto = D.totalMes[estado.mes];
@@ -602,6 +726,372 @@ function pintarRanking() {
     ? "Este mes hubo una división o fusión: el flujo de las acciones afectadas se dejó en cero (ver «Cómo leer estos datos»)."
     : "Valores en millones de $, estimados con el precio de referencia del mes. Fuente: CMF.";
 }
+
+// ============================================================
+// 5b. Administradoras (AGF)
+// ============================================================
+function prepararAgf(filas) {
+  // { periodo: [{agf, valor (millones $), peso (%)}] ordenado de mayor a menor }
+  D.agfMes = {};
+  filas.forEach(f => {
+    const p = aPeriodo(f.Periodo);
+    (D.agfMes[p] = D.agfMes[p] || []).push({ agf: f.AGF, valor: f.Valor, peso: f.Peso });
+  });
+  D.periodosAgf = Object.keys(D.agfMes).map(Number).sort((a, b) => a - b);
+  D.periodosAgf.forEach(p => D.agfMes[p].sort((a, b) => b.valor - a.valor));
+}
+function pintarSelectorAgf() {
+  const s = document.getElementById("selMesAgf");
+  s.innerHTML = D.periodosAgf.slice().reverse()
+    .map(p => `<option value="${p}">${MESES_LARGO[p % 100 - 1]} ${Math.floor(p / 100)}</option>`).join("");
+  estado.mesAgf = D.periodosAgf[D.periodosAgf.length - 1];
+  s.value = String(estado.mesAgf);
+  s.onchange = () => { estado.mesAgf = Number(s.value); pintarAgf(); };
+  const mover = paso => {
+    const i = D.periodosAgf.indexOf(estado.mesAgf) + paso;
+    if (i < 0 || i >= D.periodosAgf.length) return;
+    estado.mesAgf = D.periodosAgf[i]; s.value = String(estado.mesAgf); pintarAgf();
+  };
+  document.getElementById("agfAnterior").onclick = () => mover(-1);
+  document.getElementById("agfSiguiente").onclick = () => mover(1);
+}
+// ---------- Fondos de cada AGF ----------
+function prepararFondos(filas) {
+  // { periodo: [{run, fondo, agf, valor, pesoFondo, acciones}] }
+  D.fondosMes = {};
+  filas.forEach(f => {
+    const p = aPeriodo(f.Periodo);
+    (D.fondosMes[p] = D.fondosMes[p] || []).push({
+      run: f.Run, fondo: f.Fondo, agf: f.AGF, valor: f.Valor, pesoFondo: f.Peso_fondo, acciones: f.Acciones });
+  });
+  D.posCache = {};
+}
+// Pide el archivo de posiciones de un mes solo cuando se necesita (y lo guarda)
+async function posicionesDe(p) {
+  if (!D.posCache[p]) {
+    const nombre = "posiciones/" + Math.floor(p / 100) + "-" + String(p % 100).padStart(2, "0") + ".json";
+    D.posCache[p] = cargar(nombre);
+  }
+  return D.posCache[p];
+}
+const inicial = nombre => `<span class="inicial" aria-hidden="true">${nombre.trim().charAt(0)}</span>`;
+function migas() {
+  let h = `<nav class="migas" aria-label="Ubicación">`;
+  h += estado.agfSel ? `<button data-ir="todas">Todas las administradoras</button>` : `<span class="actual">Todas las administradoras</span>`;
+  if (estado.agfSel) {
+    h += ` <span>›</span> `;
+    h += estado.fondoSel ? `<button data-ir="agf">${estado.agfSel}</button>` : `<span class="actual">${estado.agfSel}</span>`;
+  }
+  if (estado.fondoSel) h += ` <span>›</span> <span class="actual">Fondo ${estado.fondoSel}</span>`;
+  return h + `</nav>`;
+}
+function activarMigas(caja) {
+  caja.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => {
+    if (b.dataset.ir === "todas") { estado.agfSel = null; estado.fondoSel = null; }
+    else estado.fondoSel = null;
+    pintarAgf();
+  });
+}
+
+function pintarAgf() {
+  const caja = document.getElementById("listaAgf");
+  const lista = D.agfMes[estado.mesAgf] || [];
+  const total = lista.reduce((s, x) => s + x.valor, 0);
+  document.getElementById("agfTotal").innerHTML =
+    lista.length + " administradoras. Total: <b>$" + num(total / 1e6, 2) + " billones</b>";
+  const i = D.periodosAgf.indexOf(estado.mesAgf);
+  document.getElementById("agfAnterior").disabled = i === 0;
+  document.getElementById("agfSiguiente").disabled = i === D.periodosAgf.length - 1;
+
+  if (estado.fondoSel) return pintarFichaFondo(caja);
+  if (estado.agfSel) return pintarFondosAgf(caja);
+
+  // Nivel 1: todas las administradoras
+  const maximo = Math.max(1, ...lista.map(x => x.valor));
+  caja.innerHTML = migas() +
+    `<div class="encab-col fila-agf con-inicial"><span></span><span></span><span>Administradora</span><span></span><span>Millones de $</span><span>% total</span></div>` +
+    lista.map((x, k) =>
+    `<button class="fila-agf con-inicial" data-agf="${x.agf}" title="Ver fondos de ${x.agf}">
+       <span class="pos-n">${k + 1}</span>
+       ${inicial(x.agf)}
+       <span class="nombre">${x.agf}</span>
+       <span class="barra"><span style="width:${Math.max(1, x.valor / maximo * 100)}%"></span></span>
+       <span class="monto">$${num(x.valor)}</span>
+       <span class="peso">${num(x.peso, 1)}%</span>
+     </button>`).join("");
+  activarMigas(caja);
+  caja.querySelectorAll("[data-agf]").forEach(b => b.onclick = () => { estado.agfSel = b.dataset.agf; pintarAgf(); });
+}
+
+// Nivel 2: fondos de una administradora
+function pintarFondosAgf(caja) {
+  const fondos = (D.fondosMes[estado.mesAgf] || []).filter(f => f.agf === estado.agfSel)
+    .sort((a, b) => b.valor - a.valor);
+  if (!fondos.length) {
+    caja.innerHTML = migas() + `<p class="vacio">En ${largo(estado.mesAgf)} esta administradora no tenía fondos con acciones chilenas. Prueba con otro mes.</p>`;
+    return activarMigas(caja);
+  }
+  const maximo = Math.max(1, ...fondos.map(f => f.valor));
+  caja.innerHTML = migas() +
+    `<div class="encab-col fila-agf fila-fondo"><span></span><span>Fondo</span><span></span><span>Millones de $</span><span>% del fondo</span></div>` +
+    fondos.map((f, k) =>
+    `<button class="fila-agf fila-fondo" data-run="${f.run}" title="Ver detalle del fondo">
+       <span class="pos-n">${k + 1}</span>
+       <span class="nombre">${f.fondo}<span class="run">RUN ${f.run}, ${f.acciones} acciones</span></span>
+       <span class="barra"><span style="width:${Math.max(1, f.valor / maximo * 100)}%"></span></span>
+       <span class="monto">$${num(f.valor)}</span>
+       <span class="peso">${num(f.pesoFondo, 1)}%</span>
+     </button>`).join("") +
+    `<p class="nota">"% del fondo" es la parte de los activos del fondo invertida en acciones chilenas.</p>`;
+  activarMigas(caja);
+  caja.querySelectorAll("[data-run]").forEach(b => b.onclick = () => { estado.fondoSel = Number(b.dataset.run); pintarAgf(); });
+}
+
+// Nivel 3: ficha de un fondo
+async function pintarFichaFondo(caja) {
+  const run = estado.fondoSel, mes = estado.mesAgf;
+  const f = (D.fondosMes[mes] || []).find(x => x.run === run);
+  // Historia del fondo (todos los meses)
+  const periodos = D.periodosAgf.filter(p => (D.fondosMes[p] || []).some(x => x.run === run));
+  const nombre = f ? f.fondo : (periodos.length ? D.fondosMes[periodos[periodos.length - 1]].find(x => x.run === run).fondo : "Fondo " + run);
+  caja.innerHTML = migas() + `<div class="ficha-fondo">
+      <h4>${nombre}</h4>
+      <p class="run">RUN ${run}. Administradora: ${estado.agfSel}</p>
+      ${f ? `<div class="ficha-cifras">
+        <div class="mini"><p class="que">Invertido en acciones chilenas</p><p class="valor">$${num(f.valor)} mill.</p></div>
+        <div class="mini"><p class="que">% del fondo en acciones chilenas</p><p class="valor">${num(f.pesoFondo, 1)}%</p></div>
+        <div class="mini"><p class="que">Acciones distintas</p><p class="valor">${f.acciones}</p></div>
+      </div>` : `<p class="vacio">En ${largo(mes)} este fondo no tenía acciones chilenas.</p>`}
+      <div class="dos-col">
+        <div><h5>Principales acciones en ${largo(mes)}</h5><div id="topFondo"><p class="vacio">Cargando posiciones…</p></div></div>
+        <div><h5>Invertido en acciones chilenas en el tiempo</h5>
+          <div class="lienzo bajo"><canvas id="gFondo" aria-label="Historia del fondo"></canvas></div>
+          <p class="nota">Millones de $. Sube por compras y también por alzas de precio.</p></div>
+      </div>
+      ${f ? `<div class="comparar" id="comparar"><p class="vacio">Cargando comparación…</p></div>` : ""}
+    </div>`;
+  activarMigas(caja);
+
+  dibujar("gFondo", {
+    type: "line",
+    data: { labels: periodos.map(corto), datasets: [{ label: "Invertido", borderColor: "#2B5C9E",
+      backgroundColor: "rgba(43,92,158,0.12)", fill: true, borderWidth: 2, pointRadius: 0, tension: 0.2,
+      data: periodos.map(p => D.fondosMes[p].find(x => x.run === run).valor) }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => " $" + num(c.raw) + " millones" } } },
+      scales: { x: ejeX, y: { beginAtZero: true, ticks: { callback: v => "$" + num(v) } } } }
+  });
+
+  if (!f) { document.getElementById("topFondo").innerHTML = "<p class='vacio'>Sin posiciones este mes.</p>"; return; }
+  try {
+    const pos = (await posicionesDe(mes)).filter(x => x.Run === run).sort((a, b) => b.Valor - a.Valor).slice(0, 10);
+    if (estado.fondoSel !== run || estado.mesAgf !== mes) return;   // el usuario ya cambió de vista
+    const maximo = Math.max(1, ...pos.map(x => x.Valor));
+    document.getElementById("topFondo").innerHTML = pos.map(x =>
+      `<button class="fila-rank" data-accion="${x.Accion}" title="Ver ficha de ${x.Accion}">
+         <span class="nombre">${x.Accion}</span>
+         <span class="barra"><span style="width:${Math.max(2, x.Valor / maximo * 100)}%;background:var(--acento)"></span></span>
+         <span class="monto">${num(x.Peso, 1)}% del fondo</span>
+       </button>`).join("");
+    document.querySelectorAll("#topFondo .fila-rank").forEach(b => b.onclick = () => {
+      elegirAccion(b.dataset.accion); irA("accion");
+    });
+    pintarComparacion(run, mes);
+  } catch (e) {
+    document.getElementById("topFondo").innerHTML = "<p class='vacio'>No se pudo cargar el archivo de posiciones de este mes (" + e.message + ").</p>";
+  }
+}
+
+function pintarAgfHistoria() {
+  const periodos = enRango(D.periodosAgf);
+  const top = D.agfMes[D.periodosAgf[D.periodosAgf.length - 1]].slice(0, 5).map(x => x.agf);
+  dibujar("gAgf", {
+    type: "line",
+    data: {
+      labels: periodos.map(corto),
+      datasets: top.map((a, i) => ({
+        label: a, borderColor: COLORES[i], backgroundColor: COLORES[i], borderWidth: 2, pointRadius: 0, tension: 0.2,
+        data: periodos.map(p => { const x = D.agfMes[p].find(f => f.agf === a); return x ? x.peso : null; })
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { position: "bottom", labels: { boxWidth: 12, padding: 12 } },
+        tooltip: { itemSort: (a, b) => (b.raw ?? -1) - (a.raw ?? -1),
+                   callbacks: { label: c => " " + c.dataset.label + ": " + (c.raw == null ? "–" : num(c.raw, 1) + "%") } }
+      },
+      scales: { x: ejeX, y: { beginAtZero: true, ticks: { callback: v => num(v) + "%" } } }
+    }
+  });
+}
+
+
+// ============================================================
+// 5c. Comparar ponderaciones (fondo vs IPSA u otro fondo)
+// ============================================================
+const RUN_IPSA = 9019;   // fondo indexado que replica el IPSA; en pantalla solo se muestra "IPSA"
+estado.comp = { tipo: "ipsa", agf: null, run: null };
+estado.baseComp = "acciones";   // "acciones" = % de la cartera en acciones chilenas; "fondo" = % del fondo
+estado.verTodas = false;
+
+const pp = x => (x > 0 ? "+" : x < 0 ? "−" : "") + num(Math.abs(x), 1) + " pp";
+const pct = x => num(x, 1) + "%";
+
+// Pesos de un fondo en un mes: { accion: peso }
+function pesosFondo(pos, run) {
+  const w = {};
+  pos.filter(x => x.Run === run).forEach(x => w[x.Accion] = (w[x.Accion] || 0) + x.Peso);
+  if (estado.baseComp === "acciones") {
+    const total = Object.values(w).reduce((s, v) => s + v, 0);
+    if (total > 0) Object.keys(w).forEach(a => w[a] = w[a] / total * 100);
+  }
+  return w;
+}
+function activeShare(pos, runA, runB) {
+  const norm = run => {
+    const w = {}; let t = 0;
+    pos.filter(x => x.Run === run).forEach(x => { w[x.Accion] = (w[x.Accion] || 0) + x.Peso; t += x.Peso; });
+    Object.keys(w).forEach(a => w[a] = w[a] / t * 100); return w;
+  };
+  const a = norm(runA), b = norm(runB);
+  const todas = new Set([...Object.keys(a), ...Object.keys(b)]);
+  let s = 0; todas.forEach(k => s += Math.abs((a[k] || 0) - (b[k] || 0)));
+  return s / 2;
+}
+
+async function pintarComparacion(run, mes) {
+  const caja = document.getElementById("comparar");
+  if (!caja) return;
+  const pos = await posicionesDe(mes);
+  if (estado.fondoSel !== run || estado.mesAgf !== mes) return;
+  const fondos = D.fondosMes[mes] || [];
+  const nombreFondo = (fondos.find(x => x.run === run) || {}).fondo || ("Fondo " + run);
+
+  // ¿Contra qué se compara?
+  let runB = null, nombreB = "";
+  if (estado.comp.tipo === "ipsa") { runB = RUN_IPSA; nombreB = "IPSA"; }
+  else if (estado.comp.run) {
+    runB = estado.comp.run;
+    nombreB = (fondos.find(x => x.run === runB) || {}).fondo || ("Fondo " + runB);
+  }
+
+  // Controles: botón IPSA (destacado) + botón otro fondo con selectores AGF → fondo
+  const agfs = [...new Set(fondos.map(x => x.agf))].sort();
+  const agfElegida = estado.comp.agf || estado.agfSel;
+  const fondosAgf = fondos.filter(x => x.agf === agfElegida && x.run !== run).sort((a, b) => b.valor - a.valor);
+  let h = `<h5>Comparar ponderaciones</h5>
+    <p class="sub">Compara el peso de cada acción en este fondo con el IPSA o con otro fondo. Solo pesos, no montos.</p>
+    <div class="controles">
+      <button class="btn-ipsa" data-comp="ipsa" aria-pressed="${estado.comp.tipo === "ipsa"}">Comparar con el IPSA</button>
+      <button class="btn-otro" data-comp="fondo" aria-pressed="${estado.comp.tipo === "fondo"}">Comparar con otro fondo</button>
+      <span class="espaciador"></span>
+      <div class="grupo" role="group" aria-label="Base del peso">
+        <button data-base="acciones" aria-pressed="${estado.baseComp === "acciones"}" title="Peso sobre lo invertido en acciones chilenas">% de la cartera de acciones</button>
+        <button data-base="fondo" aria-pressed="${estado.baseComp === "fondo"}" title="Peso sobre el total de activos del fondo">% del fondo</button>
+      </div>
+    </div>`;
+  if (estado.comp.tipo === "fondo") {
+    h += `<div class="controles selector-fondo">
+      <label class="etiqueta-control" for="compAgf">Administradora</label>
+      <select id="compAgf">${agfs.map(a => `<option value="${a}" ${a === agfElegida ? "selected" : ""}>${a}</option>`).join("")}</select>
+      <label class="etiqueta-control" for="compFondo">Fondo</label>
+      <select id="compFondo"><option value="">Elige un fondo…</option>${fondosAgf.map(x =>
+        `<option value="${x.run}" ${x.run === estado.comp.run ? "selected" : ""}>${x.fondo} (RUN ${x.run})</option>`).join("")}</select>
+    </div>`;
+  }
+
+  const wA = pesosFondo(pos, run);
+  const wB = runB ? pesosFondo(pos, runB) : {};
+  if (!runB) {
+    h += `<p class="vacio">Elige una administradora y un fondo para comparar.</p>`;
+  } else if (!Object.keys(wB).length) {
+    h += `<p class="vacio">${runB === RUN_IPSA ? "No hay ponderaciones del IPSA" : "Ese fondo no tenía acciones chilenas"} en ${largo(mes)}. Prueba con un mes más reciente.</p>`;
+  } else {
+    const todas = [...new Set([...Object.keys(wA), ...Object.keys(wB)])];
+    const filas = todas.map(a => ({ a, f: wA[a] || 0, c: wB[a] || 0, d: (wA[a] || 0) - (wB[a] || 0) }));
+    const sobre = filas.filter(x => x.d > 0.05 && x.c > 0).sort((x, y) => y.d - x.d).slice(0, 3);
+    const bajo = filas.filter(x => x.d < -0.05).sort((x, y) => x.d - y.d).slice(0, 3);
+    const fuera = filas.filter(x => x.c === 0 && x.f > 0).sort((x, y) => y.f - x.f);
+    const as = activeShare(pos, run, runB);
+    const enIndice = runB === RUN_IPSA ? "en el IPSA" : "en " + nombreB;
+    const base = estado.baseComp === "acciones" ? "de su cartera de acciones" : "del fondo";
+
+    // Frase principal
+    const mayor = filas.slice().sort((x, y) => Math.abs(y.d) - Math.abs(x.d))[0];
+    let frase = `${nombreFondo} tiene un <b>active share de ${pct(as)}</b> frente ${runB === RUN_IPSA ? "al IPSA" : "a " + nombreB}`;
+    frase += as < 20 ? ": se parece mucho." : as < 50 ? ": se aleja en forma moderada." : ": se aleja bastante.";
+    if (mayor) {
+      frase += mayor.d > 0
+        ? ` Su mayor sobreponderación es ${mayor.a}: ${pct(mayor.f)} ${base} frente a ${pct(mayor.c)} ${enIndice} (${pp(mayor.d)}).`
+        : ` Su mayor subponderación es ${mayor.a}: ${pct(mayor.f)} ${base} frente a ${pct(mayor.c)} ${enIndice} (${pp(mayor.d)}).`;
+    }
+    h += `<p class="titular-comp">${frase}</p>`;
+
+    // Tres tarjetas: sobrepondera, subpondera, fuera del índice
+    const li = (x, clase) => `<li><span class="${clase}">${x.a}</span>: ${pct(x.f)} vs ${pct(x.c)} (${pp(x.d)})</li>`;
+    h += `<div class="apuestas">
+      <div class="apuesta"><h6>Sobrepondera</h6>${sobre.length ? `<ul>${sobre.map(x => li(x, "sobre")).join("")}</ul>` : "<p class='vacio'>Ninguna.</p>"}</div>
+      <div class="apuesta"><h6>Subpondera</h6>${bajo.length ? `<ul>${bajo.map(x => x.f === 0
+          ? `<li><span class="bajo">${x.a}</span>: no la tiene; pesa ${pct(x.c)} ${enIndice}</li>` : li(x, "bajo")).join("")}</ul>` : "<p class='vacio'>Ninguna.</p>"}</div>
+      <div class="apuesta"><h6>${runB === RUN_IPSA ? "Fuera del IPSA" : "No están en el otro fondo"}</h6>${fuera.length
+          ? `<ul>${fuera.slice(0, 4).map(x => `<li><span class="sobre">${x.a}</span>: ${pct(x.f)}</li>`).join("")}</ul>${fuera.length > 4 ? `<p class="vacio">y ${fuera.length - 4} más</p>` : ""}`
+          : "<p class='vacio'>Todas sus acciones están en la comparación.</p>"}</div>
+    </div>`;
+
+    // Tabla con barras
+    filas.sort((x, y) => Math.max(y.f, y.c) - Math.max(x.f, x.c));
+    const maxW = Math.max(...filas.map(x => Math.max(x.f, x.c)), 1);
+    const visibles = estado.verTodas ? filas : filas.slice(0, 15);
+    h += `<p class="leyenda"><span><i style="background:var(--acento)"></i>${nombreFondo}</span><span><i style="background:#A9B4C2"></i>${runB === RUN_IPSA ? "IPSA" : nombreB}</span></p>
+      <div class="fila-comp encab"><span>Acción</span><span></span><span class="num">Fondo</span><span class="num">${runB === RUN_IPSA ? "IPSA" : "Otro"}</span><span class="num">Diferencia</span></div>` +
+      visibles.map(x => `<button class="fila-comp" data-accion="${x.a}" title="Ver ficha de ${x.a}">
+        <span class="nombre">${x.a}</span>
+        <span class="dos-barras"><span class="b-fondo" style="width:${x.f / maxW * 100}%"></span><span class="b-comp" style="width:${x.c / maxW * 100}%"></span></span>
+        <span class="num">${pct(x.f)}</span><span class="num">${pct(x.c)}</span>
+        <span class="num ${x.d > 0.05 ? "dif-pos" : x.d < -0.05 ? "dif-neg" : ""}">${pp(x.d)}</span>
+      </button>`).join("");
+    if (filas.length > 15) h += `<button class="mas" id="verTodas">${estado.verTodas ? "Mostrar solo las 15 principales" : "Mostrar las " + filas.length + " acciones"}</button>`;
+    h += `<p class="nota">Pesos de ${largo(mes)}, como ${estado.baseComp === "acciones" ? "% de lo invertido en acciones chilenas (cada cartera suma 100 %)" : "% de los activos totales de cada fondo"}. Diferencia en puntos porcentuales: positiva = sobrepondera; negativa = subpondera. Fuente: CMF.</p>`;
+  }
+  caja.innerHTML = h;
+
+  // Eventos
+  caja.querySelectorAll("[data-comp]").forEach(b => b.onclick = () => {
+    estado.comp.tipo = b.dataset.comp; pintarComparacion(run, mes);
+  });
+  caja.querySelectorAll("[data-base]").forEach(b => b.onclick = () => {
+    estado.baseComp = b.dataset.base; pintarComparacion(run, mes);
+  });
+  const sAgf = document.getElementById("compAgf");
+  if (sAgf) sAgf.onchange = () => { estado.comp.agf = sAgf.value; estado.comp.run = null; pintarComparacion(run, mes); };
+  const sFon = document.getElementById("compFondo");
+  if (sFon) sFon.onchange = () => {
+    estado.comp.agf = sAgf.value; estado.comp.run = sFon.value ? Number(sFon.value) : null; pintarComparacion(run, mes);
+  };
+  const vt = document.getElementById("verTodas");
+  if (vt) vt.onclick = () => { estado.verTodas = !estado.verTodas; pintarComparacion(run, mes); };
+  caja.querySelectorAll(".fila-comp[data-accion]").forEach(b => b.onclick = () => { elegirAccion(b.dataset.accion); irA("accion"); });
+}
+
+// ============================================================
+// 5d. Vistas (cada sección del menú es una "página" aparte)
+// ============================================================
+const VISTAS = ["inicio", "administradoras", "accion", "tendencias", "metodo"];
+function mostrarVista() {
+  let v = location.hash.replace("#", "");
+  if (!VISTAS.includes(v)) v = "inicio";
+  document.querySelectorAll("section[data-vista]").forEach(sec => sec.hidden = sec.dataset.vista !== v);
+  document.querySelectorAll("[data-vista-link]").forEach(a =>
+    a.dataset.vistaLink === v ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+  // Los gráficos de una sección oculta no saben su tamaño: se ajustan al mostrarse
+  requestAnimationFrame(() => Object.values(graficos).forEach(g => g.resize()));
+  window.scrollTo(0, 0);
+}
+function irA(v) {
+  if (location.hash === "#" + v) mostrarVista(); else location.hash = v;
+}
+window.addEventListener("hashchange", mostrarVista);
 
 // ============================================================
 // 6. Ficha de una acción
@@ -785,7 +1275,7 @@ function prepararBotones() {
     estado.rango = Number(b.dataset.rango);
     document.querySelectorAll("[data-rango]").forEach(x =>
       x.setAttribute("aria-pressed", Number(x.dataset.rango) === estado.rango));
-    pintarFlujo(); pintarPeso(); pintarPatrimonio(); pintarFicha();
+    pintarFlujo(); pintarPeso(); pintarPatrimonio(); pintarFicha(); pintarAgfHistoria();
   });
   document.querySelectorAll("[data-vista]").forEach(b => b.onclick = () => {
     estado.vistaFlujo = b.dataset.vista;
@@ -804,16 +1294,21 @@ function prepararBotones() {
 // ============================================================
 async function iniciar() {
   try {
-    const [flujo, peso, pat, tipo] = await Promise.all([
+    const [flujo, peso, pat, tipo, agf, fondosMes] = await Promise.all([
       cargar("flujo_industria.json"), cargar("peso_industria.json"),
-      cargar("cmf_patrimonio_industria.json"), cargar("cmf_patrimonio_tipo.json")
+      cargar("cmf_patrimonio_industria.json"), cargar("cmf_patrimonio_tipo.json"),
+      cargar("agf_inversion.json"), cargar("fondos_mes.json")
     ]);
     preparar(flujo, peso, pat, tipo);
+    prepararAgf(agf);
+    prepararFondos(fondosMes);
     prepararBotones();
     pintarResumen();
     pintarSelectorMes(); pintarRanking();
+    pintarSelectorAgf(); pintarAgf(); pintarAgfHistoria();
     prepararBuscador(); elegirAccion(D.ranking[0]);
     pintarFlujo(); pintarChips(); pintarPeso(); pintarPatrimonio();
+    mostrarVista();
   } catch (e) {
     console.error(e);
     const caja = document.getElementById("error");
