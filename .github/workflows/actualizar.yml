@@ -51,12 +51,12 @@ jobs:
           if git diff --cached --quiet; then
             echo "SIN CAMBIOS: no se publica nada."
             if [ "${{ inputs.probar_aviso }}" = "true" ]; then
-              gh issue create --title "Aviso de prueba $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt
+              gh issue create --title "Aviso de prueba $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt --assignee martintapia2004c-hue
               echo "AVISO DE PRUEBA creado."
             fi
           else
             git commit -m "Actualizacion automatica $(date +%Y-%m-%d)"
             git push
-            gh issue create --title "Datos actualizados $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt
+            gh issue create --title "Datos actualizados $(date +%Y-%m-%d)" --body-file /tmp/aviso.txt --assignee martintapia2004c-hue
             echo "PUBLICADO: hubo datos nuevos."
           fi
