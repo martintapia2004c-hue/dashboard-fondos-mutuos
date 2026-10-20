@@ -1,0 +1,28 @@
+# Por defecto NO subir nada de la carpeta principal...
+/*
+
+# ...excepto esto:
+!/.gitignore
+!/netlify.toml
+!/.github/
+!/sitio/
+!/web/
+!/descargador.py
+!/agregar_mes.py
+!/agf_historia.py
+!/base_acciones_ORIGINAL.csv
+!/fondos.json
+!/dashboard6.html
+!/cmf_patrimonio_industria.json
+!/cmf_patrimonio_tipo.json
+!/flujo_industria_ANTES.json
+!/peso_industria_ANTES.json
+
+# De "arreglando flujos" solo los dos scripts de la cadena
+!/arreglando flujos/
+/arreglando flujos/*
+!/arreglando flujos/corregir_eventos.py
+!/arreglando flujos/flujos_v2.py
+
+# Archivos temporales de Python
+__pycache__/
