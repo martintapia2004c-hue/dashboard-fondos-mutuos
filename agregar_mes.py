@@ -24,7 +24,7 @@ def bajar_mes(anio, mes, columnas_base):
         os.remove(ruta)
         return None
 
-    df = pd.read_csv(ruta, sep=";", keep_default_na=False, na_values=[""])
+    df = pd.read_csv(ruta, sep=";", dtype=str, keep_default_na=False)
     if df.columns.tolist() != columnas_base[1:]:
         print(f"ERROR: las columnas de {mes:02d}/{anio} no son las de siempre. No se cambió nada.")
         raise SystemExit(1)
@@ -33,6 +33,7 @@ def bajar_mes(anio, mes, columnas_base):
         print(f"ERROR: {mes:02d}/{anio} no trae acciones. No se cambió nada.")
         raise SystemExit(1)
     acc.insert(0, "Mes", f"{mes:02d}/{anio}")
+    acc = acc.sort_values(acc.columns.tolist()).reset_index(drop=True)
     return acc
 
 
