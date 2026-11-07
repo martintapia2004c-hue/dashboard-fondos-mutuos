@@ -2,7 +2,7 @@ name: Actualizar datos
 
 on:
   schedule:
-    - cron: "0 13 6-15 * *"   # días 6 al 15 de cada mes, 13:00 UTC (10:00 en Chile)
+    - cron: "0 13 15 * *"   # días 6 al 15 de cada mes, 13:00 UTC (10:00 en Chile)
   workflow_dispatch:           # y también con el botón "Run workflow"
     inputs:
       probar_aviso:
